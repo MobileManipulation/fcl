@@ -45,7 +45,7 @@ include(FCLMacros)
 include(CompilerSettings)
 include(FCLVersion)
 include(GNUInstallDirs)
-include(GenerateExportHeader) 
+include(GenerateExportHeader)
 
 if(MSVC OR IS_ICPC)
   option(FCL_STATIC_LIBRARY "Whether the FCL library should be static rather than shared" ON)
@@ -175,45 +175,50 @@ set(PKG_EXTERNAL_DEPS "ccd eigen3")
 # If OctoMap is not found, manually set the cache variables OCTOMAP_INCLUDE_DIR
 # and OCTOMAP_LIBRARY, OCTOMATH_LIBRARY, and OCTOMAP_VERSION
 #===============================================================================
+# option(FCL_WITH_OCTOMAP "OctoMap library support" ON)
+# @see https://github.com/flexible-collision-library/fcl/issues/210 --sprax
+# set(FCL_HAVE_OCTOMAP 1)
+# set(FCL_WITH_OCTOMAP 1)
+
 option(FCL_WITH_OCTOMAP "OctoMap library support" ON)
 set(FCL_HAVE_OCTOMAP 0)
 
 if(FCL_WITH_OCTOMAP)
-  find_package(octomap QUIET)
+  find_package(octomap REQUIRED)
 
-  # Older versions of octomap-config.cmake may not define OCTOMAP_VERSION so
-  # fall back to pkg-config
-  if(NOT octomap_FOUND OR NOT OCTOMAP_VERSION)
-    if(PKG_CONFIG_FOUND)
-      pkg_check_modules(PC_OCTOMAP octomap)
-    endif()
+#   # Older versions of octomap-config.cmake may not define OCTOMAP_VERSION so
+#   # fall back to pkg-config
+#   if(NOT octomap_FOUND OR NOT OCTOMAP_VERSION)
+#     if(PKG_CONFIG_FOUND)
+#       pkg_check_modules(PC_OCTOMAP octomap)
+#     endif()
 
-    find_path(OCTOMAP_INCLUDE_DIR octomap/octomap.h
-      HINTS "${PC_OCTOMAP_INCLUDE_DIRS}")
+#     find_path(OCTOMAP_INCLUDE_DIR octomap/octomap.h
+#       HINTS "${PC_OCTOMAP_INCLUDE_DIRS}")
 
-    # Using find_library() even if pkg-config is available ensures that the full
-    # paths to the octomap and octomath libraries are set in OCTOMAP_LIBRARIES
-    find_library(OCTOMAP_LIBRARY octomap
-      HINTS "${PC_OCTOMAP_LIBRARY_DIRS}")
+#     # Using find_library() even if pkg-config is available ensures that the full
+#     # paths to the octomap and octomath libraries are set in OCTOMAP_LIBRARIES
+#     find_library(OCTOMAP_LIBRARY octomap
+#       HINTS "${PC_OCTOMAP_LIBRARY_DIRS}")
 
-    find_library(OCTOMATH_LIBRARY octomath
-      HINTS "${PC_OCTOMAP_LIBRARY_DIRS}")
+#     find_library(OCTOMATH_LIBRARY octomath
+#       HINTS "${PC_OCTOMAP_LIBRARY_DIRS}")
 
-    # Use a cache variable so that the version can be manually set if pkg-config
-    # is not available
-    set(OCTOMAP_VERSION "${PC_OCTOMAP_VERSION}"
-      CACHE STRING "octomap version (major.minor.patch)")
+#     # Use a cache variable so that the version can be manually set if pkg-config
+#     # is not available
+#     set(OCTOMAP_VERSION "${PC_OCTOMAP_VERSION}"
+#       CACHE STRING "octomap version (major.minor.patch)")
 
-    if(OCTOMAP_INCLUDE_DIR AND OCTOMAP_LIBRARY AND OCTOMATH_LIBRARY AND OCTOMAP_VERSION)
-      set(OCTOMAP_INCLUDE_DIRS "${OCTOMAP_INCLUDE_DIR}")
-      set(OCTOMAP_LIBRARIES "${OCTOMAP_LIBRARY}" "${OCTOMATH_LIBRARY}")
-      set(octomap_FOUND ON)
+#     if(OCTOMAP_INCLUDE_DIR AND OCTOMAP_LIBRARY AND OCTOMATH_LIBRARY AND OCTOMAP_VERSION)
+#       set(OCTOMAP_INCLUDE_DIRS "${OCTOMAP_INCLUDE_DIR}")
+#       set(OCTOMAP_LIBRARIES "${OCTOMAP_LIBRARY}" "${OCTOMATH_LIBRARY}")
+#       set(octomap_FOUND ON)
 
-      mark_as_advanced(OCTOMAP_INCLUDE_DIR OCTOMAP_LIBRARY OCTOMATH_LIBRARY OCTOMAP_VERSION)
-    else()
-      set(octomap_FOUND OFF)
-    endif()
-  endif()
+#       mark_as_advanced(OCTOMAP_INCLUDE_DIR OCTOMAP_LIBRARY OCTOMATH_LIBRARY OCTOMAP_VERSION)
+#     else()
+#       set(octomap_FOUND OFF)
+#     endif()
+#   endif()
 
   if(octomap_FOUND)
     if(NOT OCTOMAP_MAJOR_VERSION AND NOT OCTOMAP_MINOR_VERSION AND NOT OCTOMAP_PATCH_VERSION)
@@ -225,6 +230,9 @@ if(FCL_WITH_OCTOMAP)
 
     set(FCL_HAVE_OCTOMAP 1)
     message(STATUS "FCL uses OctoMap")
+    message(STATUS ${OCTOMAP_MAJOR_VERSION} ${OCTOMAP_MINOR_VERSION} ${OCTOMAP_PATCH_VERSION})
+    message(STATUS ${OCTOMAP_INCLUDE_DIRS})
+    message(STATUS ${OCTOMAP_LIBRARIES})
     set(PKG_EXTERNAL_DEPS "${PKG_EXTERNAL_DEPS} octomap")
   else()
     message(STATUS "FCL does not use OctoMap")
@@ -232,6 +240,7 @@ if(FCL_WITH_OCTOMAP)
 else()
   message(STATUS "FCL does not use OctoMap (as requested)")
 endif()
+
 
 # FCL's own include dir should be at the front of the include path
 include_directories(BEFORE "include")
