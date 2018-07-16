@@ -218,39 +218,39 @@ set(FCL_HAVE_OCTOMAP 0)
 if(FCL_WITH_OCTOMAP)
   find_package(octomap REQUIRED)
 
-#   # Older versions of octomap-config.cmake may not define OCTOMAP_VERSION so
-#   # fall back to pkg-config
-#   if(NOT octomap_FOUND OR NOT OCTOMAP_VERSION)
-#     if(PKG_CONFIG_FOUND)
-#       pkg_check_modules(PC_OCTOMAP octomap)
-#     endif()
+  # Older versions of octomap-config.cmake may not define OCTOMAP_VERSION so
+  # fall back to pkg-config
+  if(NOT octomap_FOUND OR NOT OCTOMAP_VERSION)
+    if(PKG_CONFIG_FOUND)
+      pkg_check_modules(PC_OCTOMAP octomap)
+    endif()
 
-#     find_path(OCTOMAP_INCLUDE_DIR octomap/octomap.h
-#       HINTS "${PC_OCTOMAP_INCLUDE_DIRS}")
+    find_path(OCTOMAP_INCLUDE_DIR octomap/octomap.h
+      HINTS "${PC_OCTOMAP_INCLUDE_DIRS}")
 
-#     # Using find_library() even if pkg-config is available ensures that the full
-#     # paths to the octomap and octomath libraries are set in OCTOMAP_LIBRARIES
-#     find_library(OCTOMAP_LIBRARY octomap
-#       HINTS "${PC_OCTOMAP_LIBRARY_DIRS}")
+    # Using find_library() even if pkg-config is available ensures that the full
+    # paths to the octomap and octomath libraries are set in OCTOMAP_LIBRARIES
+    find_library(OCTOMAP_LIBRARY octomap
+      HINTS "${PC_OCTOMAP_LIBRARY_DIRS}")
 
-#     find_library(OCTOMATH_LIBRARY octomath
-#       HINTS "${PC_OCTOMAP_LIBRARY_DIRS}")
+    find_library(OCTOMATH_LIBRARY octomath
+      HINTS "${PC_OCTOMAP_LIBRARY_DIRS}")
 
-#     # Use a cache variable so that the version can be manually set if pkg-config
-#     # is not available
-#     set(OCTOMAP_VERSION "${PC_OCTOMAP_VERSION}"
-#       CACHE STRING "octomap version (major.minor.patch)")
+    # Use a cache variable so that the version can be manually set if pkg-config
+    # is not available
+    set(OCTOMAP_VERSION "${PC_OCTOMAP_VERSION}"
+      CACHE STRING "octomap version (major.minor.patch)")
 
-#     if(OCTOMAP_INCLUDE_DIR AND OCTOMAP_LIBRARY AND OCTOMATH_LIBRARY AND OCTOMAP_VERSION)
-#       set(OCTOMAP_INCLUDE_DIRS "${OCTOMAP_INCLUDE_DIR}")
-#       set(OCTOMAP_LIBRARIES "${OCTOMAP_LIBRARY}" "${OCTOMATH_LIBRARY}")
-#       set(octomap_FOUND ON)
+    if(OCTOMAP_INCLUDE_DIR AND OCTOMAP_LIBRARY AND OCTOMATH_LIBRARY AND OCTOMAP_VERSION)
+      set(OCTOMAP_INCLUDE_DIRS "${OCTOMAP_INCLUDE_DIR}")
+      set(OCTOMAP_LIBRARIES "${OCTOMAP_LIBRARY}" "${OCTOMATH_LIBRARY}")
+      set(octomap_FOUND ON)
 
-#       mark_as_advanced(OCTOMAP_INCLUDE_DIR OCTOMAP_LIBRARY OCTOMATH_LIBRARY OCTOMAP_VERSION)
-#     else()
-#       set(octomap_FOUND OFF)
-#     endif()
-#   endif()
+      mark_as_advanced(OCTOMAP_INCLUDE_DIR OCTOMAP_LIBRARY OCTOMATH_LIBRARY OCTOMAP_VERSION)
+    else()
+      set(octomap_FOUND OFF)
+    endif()
+  endif()
 
   if(octomap_FOUND)
     if(NOT OCTOMAP_MAJOR_VERSION AND NOT OCTOMAP_MINOR_VERSION AND NOT OCTOMAP_PATCH_VERSION)
