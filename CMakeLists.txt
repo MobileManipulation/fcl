@@ -216,7 +216,7 @@ option(FCL_WITH_OCTOMAP "OctoMap library support" ON)
 set(FCL_HAVE_OCTOMAP 0)
 
 if(FCL_WITH_OCTOMAP)
-  find_package(octomap REQUIRED)
+  find_package(octomap 1.9.0 REQUIRED EXACT)
 
   # Older versions of octomap-config.cmake may not define OCTOMAP_VERSION so
   # fall back to pkg-config
