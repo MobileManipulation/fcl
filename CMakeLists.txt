@@ -184,7 +184,7 @@ option(FCL_WITH_OCTOMAP "OctoMap library support" ON)
 set(FCL_HAVE_OCTOMAP 0)
 
 if(FCL_WITH_OCTOMAP)
-  find_package(octomap 1.9.0 REQUIRED EXACT)
+  find_package(octomap 1.9 REQUIRED)
 
   # Older versions of octomap-config.cmake may not define OCTOMAP_VERSION so
   # fall back to pkg-config
@@ -229,8 +229,8 @@ if(FCL_WITH_OCTOMAP)
     endif()
 
     set(FCL_HAVE_OCTOMAP 1)
-    message(STATUS "FCL uses OctoMap")
-    message(STATUS ${OCTOMAP_MAJOR_VERSION} ${OCTOMAP_MINOR_VERSION} ${OCTOMAP_PATCH_VERSION})
+    message(STATUS "FCL uses OctoMap:")
+    message(STATUS ${OCTOMAP_MAJOR_VERSION} "." ${OCTOMAP_MINOR_VERSION} "." ${OCTOMAP_PATCH_VERSION})
     message(STATUS ${OCTOMAP_INCLUDE_DIRS})
     message(STATUS ${OCTOMAP_LIBRARIES})
     set(PKG_EXTERNAL_DEPS "${PKG_EXTERNAL_DEPS} octomap")
