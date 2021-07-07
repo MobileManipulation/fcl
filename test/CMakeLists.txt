@@ -52,13 +52,16 @@ set(tests
     test_fcl_distance.cpp
     test_fcl_frontlist.cpp
     test_fcl_general.cpp
+    test_fcl_generate_bvh_model_deferred_finalize.cpp
     test_fcl_geometric_shapes.cpp
     test_fcl_math.cpp
     test_fcl_profiler.cpp
     test_fcl_shape_mesh_consistency.cpp
     test_fcl_signed_distance.cpp
     test_fcl_simple.cpp
+    test_fcl_sphere_box.cpp
     test_fcl_sphere_capsule.cpp
+    test_fcl_sphere_cylinder.cpp
     test_fcl_sphere_sphere.cpp
 )
 
@@ -94,4 +97,5 @@ foreach(test ${tests})
   add_fcl_test(${test})
 endforeach(test)
 
+add_subdirectory(geometry)
 add_subdirectory(narrowphase)
